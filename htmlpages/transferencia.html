@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Realizar Transferência</h2>
+        <input type="number" id="transfer-value" placeholder="Digite o valor" min="1">
+        <input type="number" id="cpf" placeholder="Digite o CPF" min="1">
+        <button onclick="realizarTranferencia()">Transferir</button>
+    </div>
+
+    <script>
+        async function realizarTranferencia() {
+            const valor = document.getElementById("transfer-value").value
+            const cpf = document.getElementById("cpf").value
+            console.log(valor)
+            const response = await fetch("http://localhost:3000/dashboard/enviarValor", {
+                    method: "POST",
+                    headers: {
+                            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({valor: valor, cpf: cpf})
+        })
+        if(response.status == 201){
+            window.location.href = "/dashboard"
+        } else {
+            alert("Saldo inadequado")
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "picpay-challenge",
+  "version": "1.0.0",
+  "main": "index.cjs",
+  "scripts": {
+    "start": "node src/index.cjs",
+    "dev": "nodemon src/index.cjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

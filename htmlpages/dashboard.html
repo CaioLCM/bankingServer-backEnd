@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .user-info {
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .deposit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .transfer {
+            background-color: #008CBA;
+            color: white;
+        }
+        .logout {
+            background-color: #FF5733;
+            color: white;
+        }
+        .delete-account {
+            background-color: #d9534f;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .saldo {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="user-info">
+            <h2>Bem-vindo, <span id="user-name">Usuário</span>!</h2>
+            <p>Email: <span id="user-email">exemplo@email.com</span></p>
+        </div>
+
+        <button class="deposit" onclick="depositar()">Depósito</button>
+        <button class="transfer" onclick="transferir()">Transferência</button>
+        <button class="logout" onclick="logout()">Logout</button>
+        <button class="delete-account" onclick="excluirConta()">Excluir Conta</button>
+
+        <div class="saldo">
+            <h3>Saldo disponível:</h3>
+            <p id="saldo">R$: 0</p>
+        </div>
+    </div>
+
+    <script>
+        async function carregarUsuario() {
+            try {
+                const response = await fetch("http://localhost:3000/usuario", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Usuário não autenticado");
+                }
+
+                const data = await response.json();
+                document.getElementById("user-name").textContent = data.nome;
+                document.getElementById("user-email").textContent = data.email;
+                document.getElementById("saldo").textContent = `R$${data.saldo}`;
+            } catch (error) {
+                console.log("Erro ao carregar usuário", error);
+                window.location.href = "/";
+            }
+        }
+
+        async function logout() {
+            await fetch("http://localhost:3000/logout", {
+                method: "POST",
+                credentials: "include"
+            });
+            window.location.href = "/";
+        }
+
+        async function depositar() {
+            const response = await fetch("http://localhost:3000/dashboard/depositar", {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                window.location.href = "/";
+            } else {
+                window.location.href = "/dashboard/depositar";
+            }
+        }
+
+        async function transferir() {
+            window.location.href = "/dashboard/transferir";
+        }
+
+        async function excluirConta() {
+            const confirmacao = confirm("Tem certeza de que deseja excluir sua conta? Esta ação é irreversível.");
+            if (!confirmacao) return;
+
+            try {
+                const response = await fetch("http://localhost:3000/dashboard/excluirConta", {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                if (response.ok) {
+                    alert("Conta excluída com sucesso!");
+                    window.location.href = "/";
+                } else {
+                    alert("Erro ao excluir a conta. Tente novamente.");
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Erro de conexão.");
+            }
+        }
+
+        window.onload = carregarUsuario;
+    </script>
+
+</body>
+</html>
